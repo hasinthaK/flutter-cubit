@@ -19,7 +19,8 @@ class AuthRepository {
 
   /// Returns basic userData with bearer token after successful login
   Future<UserData> login(LoginCredentials credentials) async {
-    return await authService.login(credentials);
+    dynamic userDataRaw = await authService.login(credentials);
+    return UserData.fromJson(userDataRaw);
   }
 
 }

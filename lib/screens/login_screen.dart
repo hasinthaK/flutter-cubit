@@ -58,6 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
     _formKey.currentState.reset();
   }
 
+  // Error snackbar to show errors
+  final _errorSnackBar = SnackBar(
+    content: Text(
+      "An error occurred while login you in!",
+      style: TextStyle(color: Colors.white),
+    ),
+    backgroundColor: Colors.redAccent,
+    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    duration: Duration(seconds: 5),
+
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,20 +82,22 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state is UserDataFetched) {
                 Navigator.pushReplacementNamed(context, PROFILE_ROUTE);
               }
+              //  Show error snackbar if authentication error occurred
+              if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(_errorSnackBar);
+              }
             },
             child: Container(
               alignment: Alignment.center,
               child: BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-
                   // if auth loading, show spinner
                   if (state is AuthLoading)
                     return Center(
                         child: SpinKitFadingCircle(
-                        color: Colors.blue,
-                        size: 25.0,
-                      )
-                    );
+                      color: Colors.blue,
+                      size: 25.0,
+                    ));
 
                   //else return the login-form itself
                   return Form(
